@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Vertically align items */
+    background: #003366; /* Dark blue */
+    color: white;
+    padding: 10px 20px; /* Added padding for spacing */
+}
+
+.logo {
+    height: 40px; /* Logo height */
+    margin-right: 15px; /* Space between logo and title */
+}
+
+nav {
+    flex-grow: 1; /* Allow nav to grow and take available space */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex; /* Use flexbox for navigation items */
+    justify-content: flex-end; /* Align items to the right */
+}
+
+nav ul li {
+    margin: 0 15px; /* Space between items */
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap; /* Allow articles to wrap */
+    gap: 20px; /* Space between cards */
+}
+
+article {
+    background: white;
+    padding: 15px;
+    margin: 0;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(30% - 20px); /* Adjust width for responsive cards */
+    min-width: 250px; /* Minimum width for cards */
+}
+
+article h3 {
+    color: red; /* Change article title color to red */
+}
+
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background: #003366;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
