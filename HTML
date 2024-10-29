@@ -1,71 +1,73 @@
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>School Announcements</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">School Announcements</h1>
+            <button class="admin-button" onclick="showAdminLogin()">Admin Login</button>
+        </div>
 
-header {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Vertically align items */
-    background: #003366; /* Dark blue */
-    color: white;
-    padding: 10px 20px; /* Added padding for spacing */
-}
+        <div class="announcements" id="announcements">
+            <div class="announcement">
+                <div class="date-badge">OCT 29</div>
+                <div class="content">
+                    <span class="breaking">BREAKING</span>
+                    <strong>Early Voting Week for Student Council Elections</strong>
+                    <div class="meta">Voting stations open in the main hall from 12-2pm</div>
+                    <img src="/api/placeholder/400/300" class="announcement-image" alt="Early Voting">
+                </div>
+            </div>
+            <div class="announcement">
+                <div class="date-badge">OCT 30</div>
+                <div class="content">
+                    <strong>Fall Sports Awards Ceremony</strong>
+                    <div class="meta">Join us in the gymnasium at 7pm to celebrate our athletes</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-.logo {
-    height: 40px; /* Logo height */
-    margin-right: 15px; /* Space between logo and title */
-}
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+        <div class="modal-content">
+            <h2>Admin Login</h2>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="adminPassword">
+            </div>
+            <div class="form-actions">
+                <button class="close-button" onclick="closeModal()">Cancel</button>
+                <button class="submit-button" onclick="verifyAdmin()">Login</button>
+            </div>
+        </div>
+    </div>
 
-nav {
-    flex-grow: 1; /* Allow nav to grow and take available space */
-}
+    <script>
+        const adminPassword = 'IBDGIC'; // Set the admin password
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    display: flex; /* Use flexbox for navigation items */
-    justify-content: flex-end; /* Align items to the right */
-}
+        function showAdminLogin() {
+            document.getElementById('adminLoginModal').style.display = 'block';
+        }
 
-nav ul li {
-    margin: 0 15px; /* Space between items */
-}
+        function closeModal() {
+            document.getElementById('adminLoginModal').style.display = 'none';
+        }
 
-nav a {
-    color: white;
-    text-decoration: none;
-}
-
-main {
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap; /* Allow articles to wrap */
-    gap: 20px; /* Space between cards */
-}
-
-article {
-    background: white;
-    padding: 15px;
-    margin: 0;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    flex: 1 1 calc(30% - 20px); /* Adjust width for responsive cards */
-    min-width: 250px; /* Minimum width for cards */
-}
-
-article h3 {
-    color: red; /* Change article title color to red */
-}
-
-footer {
-    text-align: center;
-    padding: 10px 0;
-    background: #003366;
-    color: white;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
+        function verifyAdmin() {
+            const inputPassword = document.getElementById('adminPassword').value;
+            if (inputPassword === adminPassword) {
+                alert('Login successful!');
+                closeModal();
+                // Here you could redirect to the admin panel or show further options
+            } else {
+                alert('Incorrect password');
+            }
+        }
+    </script>
+</body>
+</html>
