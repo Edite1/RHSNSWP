@@ -1,1 +1,147 @@
+// Password management functionality
+class PasswordManager {
+    constructor() {
+        this.minLength = 8;
+        this.setupEventListeners();
+    }
 
+    setupEventListeners() {
+        const passwordForm = document.getElementById('passwordForm');
+        const newPassword = document.getElementById('newPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        
+        if (newPassword) {
+            newPassword.addEventListener('input', () => this.updatePasswordStrength());
+        }
+        
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', (e) => this.handlePasswordChange(e));
+        }
+    }
+
+    updatePasswordStrength() {
+        const password = document.getElementById('newPassword').value;
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        const strength = this.calculatePasswordStrength(password);
+        
+        strengthBar.style.width = `${strength.score * 33.33}%`;
+        strengthBar.className = 'password-strength-bar';
+        strengthBar.classList.add(`strength-${strength.level}`);
+        
+        document.getElementById('submitPassword').disabled = password.length < this.minLength;
+    }
+
+    calculatePasswordStrength(password) {
+        let score = 0;
+        
+        // Length check
+        if (password.length >= this.minLength) score++;
+        if (password.length >= 12) score++;
+        
+        // Complexity checks
+        if (/[A-Z]/.test(password)) score++;
+        if (/[a-z]/.test(password)) score++;
+        if (/[0-9]/.test(password)) score++;
+        if (/[^A-Za-z0-9]/.test(password)) score++;
+        
+        const level = score <= 2 ? 'weak' : score <= 4 ? 'medium' : 'strong';
+        
+        return { score: Math.min(score / 6 * 100, 100), level };
+    }
+
+    async handlePasswordChange(event) {
+        event.preventDefault();
+        
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // Validate current password
+        const savedPassword = localStorage.getItem('adminPassword');
+        if (currentPassword !== savedPassword) {
+            this.showMessage('Current password is incorrect', 'error');
+            return;
+        }
+        
+        // Validate new password
+        if (newPassword.length < this.minLength) {
+            this.showMessage(`Password must be at least ${this.minLength} characters`, 'error');
+            return;
+        }
+        
+        // Confirm passwords match
+        if (newPassword !== confirmPassword) {
+            this.showMessage('New passwords do not match', 'error');
+            return;
+        }
+        
+        try {
+            // Update password in localStorage
+            localStorage.setItem('adminPassword', newPassword);
+            this.showMessage('Password updated successfully', 'success');
+            
+            // Clear form
+            event.target.reset();
+            this.updatePasswordStrength();
+            
+        } catch (error) {
+            console.error('Error updating password:', error);
+            this.showMessage('Error updating password', 'error');
+        }
+    }
+
+    showMessage(message, type) {
+        const messageElement = document.getElementById(`password${type.charAt(0).toUpperCase() + type.slice(1)}`);
+        messageElement.textContent = message;
+        messageElement.style.display = 'block';
+        
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+        }, 3000);
+    }
+}
+
+// Initialize password manager when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Add settings section HTML
+    const settingsSection = document.getElementById('settings');
+    if (settingsSection) {
+        settingsSection.innerHTML = `
+            <div class="settings-section">
+                <h2>Change Password</h2>
+                <form id="passwordForm" class="password-form">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" class="form-control" required>
+                        <div class="password-requirements">
+                            Password must be at least 8 characters long
+                        </div>
+                        <div class="password-strength">
+                            <div id="passwordStrengthBar" class="password-strength-bar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" required>
+                    </div>
+                    
+                    <div id="passwordError" class="error" style="display: none;"></div>
+                    <div id="passwordSuccess" class="success" style="display: none;"></div>
+                    
+                    <button type="submit" id="submitPassword" class="button primary" disabled>
+                        Update Password
+                    </button>
+                </form>
+            </div>
+        `;
+        
+        // Initialize password manager
+        new PasswordManager();
+    }
+});
